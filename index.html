@@ -1,10 +1,121 @@
-<html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Welcome to louis14141.github.io</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap"
+    rel="stylesheet"
+  />
+<link rel="stylesheet" href="styles.css">
+</head>
 <body>
+  <!-- Floating bubbles -->
+  <div aria-hidden="true" class="bubble bubble1"></div>
+  <div aria-hidden="true" class="bubble bubble2"></div>
+  <div aria-hidden="true" class="bubble bubble3"></div>
+  <div aria-hidden="true" class="bubble bubble4"></div>
+  <div aria-hidden="true" class="bubble bubble5"></div>
 
-<h1>welcome</h1>
-<p>on this page nothing wil hapen</p>
-<p>this is an placeholder for louis14141.github.io
-</p>
+  <header class="mb-12 text-center max-w-lg px-4 relative z-10">
+    <h1
+      class="text-6xl font-extrabold soft-glow-text mb-6 animate-fadeInDown flicker"
+      style="animation-fill-mode: forwards"
+      tabindex="0"
+    >
+      Welcome
+    </h1>
+    <p
+      class="text-xl md:text-2xl mb-3 drop-shadow-lg animate-fadeIn"
+      style="animation-delay: 0.25s; animation-fill-mode: forwards"
+      tabindex="0"
+    >
+      On this page, nothing will happen.
+    </p>
+    <p
+      class="text-sm md:text-base opacity-80 animate-fadeIn"
+      style="animation-delay: 0.5s; animation-fill-mode: forwards"
+      tabindex="0"
+    >
+      This is a placeholder for
+      <span
+        class="font-semibold underline-animated decoration-pink-500 decoration-2 underline-offset-4"
+        tabindex="0"
+        >louis14141.github.io</span
+      >
+    </p>
+  </header>
+
+  <a
+    id="github-link"
+    class="mt-8 inline-flex items-center gap-3 bg-white bg-opacity-25 hover:bg-opacity-50 transition rounded-xl px-8 py-4 text-white font-semibold shadow-lg pulse-button select-text relative z-10"
+    href="https://github.com/louis14141/louis14141.github.io/"
+    rel="noopener noreferrer"
+    target="_blank"
+    aria-label="Go to GitHub repository"
+  >
+    <i
+      id="github-icon"
+      class="fab fa-github text-3xl bounce-icon"
+      aria-hidden="true"
+    ></i>
+    Go to files
+  </a>
+
+  <footer
+    class="mt-16 text-center max-w-md px-4 text-white/70 text-sm select-text animate-fadeIn relative z-10"
+    style="animation-delay: 0.75s; animation-fill-mode: forwards"
+    tabindex="0"
+  >
+    <p>
+      &copy; 2024 louis14141.github.io — Crafted with Tailwind CSS and
+      <span class="inline-block animate-pulse" style="color:#ec4899;">❤️</span>
+    </p>
+  </footer>
+
+  <script>
+    const githubIcon = document.getElementById("github-icon");
+    const githubLink = document.getElementById("github-link");
+
+    // Start bounce initially
+    githubIcon.classList.add("bounce-icon");
+
+    // On hover or focus, spin and stop bounce
+    function startSpinBounce() {
+      githubIcon.classList.add("spinning");
+      githubIcon.classList.remove("bounce-icon");
+    }
+    // On mouse leave or blur, smoothly revert to bounce
+    function stopSpinBounce() {
+      githubIcon.classList.remove("spinning");
+      // Smoothly add bounce back after short delay
+      setTimeout(() => {
+        githubIcon.classList.add("bounce-icon");
+      }, 150);
+    }
+
+    githubLink.addEventListener("mouseenter", startSpinBounce);
+    githubLink.addEventListener("focus", startSpinBounce);
+    githubLink.addEventListener("mouseleave", stopSpinBounce);
+    githubLink.addEventListener("blur", stopSpinBounce);
+
+    // Optional: subtle 3D tilt effect on button based on mouse position
+    githubLink.addEventListener("mousemove", (e) => {
+      const rect = githubLink.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const rotateX = (-y / (rect.height / 2)) * 8;
+      const rotateY = (x / (rect.width / 2)) * 8;
+      githubLink.style.transform = `scale(1.1) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+    });
+    githubLink.addEventListener("mouseleave", () => {
+      githubLink.style.transform = "";
+    });
+  </script>
 </body>
-  <a href="https://github.com/louis14141/louis14141.github.io/">go to files</a>
 </html>
