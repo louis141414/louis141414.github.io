@@ -1,0 +1,447 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Windows XP Popup - Editable</title>
+  <link rel="icon" type="image/x-icon" href="https://images.seeklogo.com/logo-png/26/2/windows-xp-icon-logo-png_seeklogo-267395.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Tahoma&display=swap");
+
+    body,
+    button,
+    p,
+    input,
+    textarea {
+      font-family: "Tahoma", sans-serif;
+    }
+
+    ::selection {
+      background: #0a246a;
+      color: white;
+    }
+
+    .dialogue p:focus {
+      outline: none;
+      background-color: #fff8dc;
+      box-shadow: inset 0 0 5px #0059f0;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-xp {
+      border: 2px solid #fff;
+      box-shadow: inset -2px -2px 0 #808080, inset 2px 2px 0 #404040;
+      background: linear-gradient(145deg, #e0e0e0, #a0a0a0);
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+      user-select: none;
+    }
+
+    .btn-xp:active {
+      box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #404040;
+      background: linear-gradient(145deg, #a0a0a0, #e0e0e0);
+    }
+
+    .title-text {
+      text-shadow: 0 0 2px #000080;
+    }
+
+    .icon-container {
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border: 1px solid #000080;
+      box-shadow: inset 1px 1px 0 #c0c0c0, inset -1px -1px 0 #404040;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 6px;
+      border-radius: 2px;
+    }
+
+    .dialogue p {
+      max-height: 120px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      padding-right: 4px;
+      cursor: text;
+    }
+
+    .dialogue p[contenteditable="true"] {
+      cursor: text;
+    }
+
+    .dialogue p[contenteditable="false"] {
+      cursor: default;
+    }
+
+    .dialogue p::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .dialogue p::-webkit-scrollbar-track {
+      background: #d4d0c8;
+      border: 1px solid #808080;
+      border-radius: 4px;
+    }
+
+    .dialogue p::-webkit-scrollbar-thumb {
+      background: #000080;
+      border-radius: 4px;
+    }
+
+    input[type="text"]::-webkit-scrollbar,
+    textarea::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+
+    input[type="text"]::-webkit-scrollbar-track,
+    textarea::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 3px;
+    }
+
+    input[type="text"]::-webkit-scrollbar-thumb,
+    textarea::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 3px;
+    }
+
+    /* Hide scrollbar for Firefox */
+    .dialogue p,
+    textarea,
+    input[type="text"] {
+      scrollbar-width: thin;
+      scrollbar-color: #000080 #d4d0c8;
+    }
+
+    /* Container for the entire page to keep footer button fixed */
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #008080;
+      padding: 1rem;
+      margin: 0;
+      position: relative;
+    }
+
+    /* Edit panel container */
+    #editPanel {
+      width: 380px;
+      max-width: 100%;
+      background: #c0c0c0;
+      border: 1px solid #000080;
+      border-radius: 0.25rem;
+      box-shadow: 6px 6px 0 0 rgba(0, 0, 0, 0.4);
+      padding: 1rem;
+      margin-bottom: 3.5rem; /* space for toggle button */
+      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+      overflow: hidden;
+    }
+
+    #editPanel.hidden {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Toggle button fixed at bottom center */
+    #toggleEditBtn {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #c0c0c0;
+      border: 1px solid #000080;
+      box-shadow: 6px 6px 0 0 rgba(0, 0, 0, 0.4);
+      border-radius: 0.25rem;
+      padding: 0.4rem 1rem;
+      font-weight: 600;
+      color: #000080;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s ease;
+      z-index: 50;
+    }
+
+    #toggleEditBtn:hover {
+      background: #d0d0d0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 400px) {
+      #editPanel,
+      .popup-container {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Container -->
+  <div
+    aria-labelledby="dialogTitle"
+    aria-modal="true"
+    class="w-[380px] max-w-full border border-[#000080] rounded-sm bg-[#C0C0C0] shadow-[6px_6px_0_0_rgba(0,0,0,0.4)] mb-6 popup-container"
+    role="dialog"
+  >
+    <!-- Title Bar -->
+    <div
+      class="flex justify-between items-center bg-gradient-to-b from-[#0000a0] to-[#000080] text-white px-3 h-9 rounded-t-sm select-text cursor-default border-b border-[#000060] shadow-[inset_0_-2px_3px_rgba(0,0,0,0.5)]"
+    >
+      <div class="flex items-center">
+        <div
+          aria-hidden="true"
+          class="icon-container"
+          id="iconContainer"
+          title="Popup Icon"
+        >
+          <img
+            alt="Windows XP style blue information icon with white background and pixel edges"
+            class="w-4 h-4"
+            decoding="async"
+            height="16"
+            loading="lazy"
+            src="https://storage.googleapis.com/a1aa/image/033a5668-b79f-44af-5116-2dc999a9a02a.jpg"
+            width="16"
+            id="popupIcon"
+          />
+        </div>
+        <span
+          class="font-semibold text-[14px] leading-none title-text select-text"
+          id="dialogTitle"
+          >Text box</span
+        >
+      </div>
+      <button
+        aria-label="Close"
+        class="w-7 h-7 flex items-center justify-center bg-[#C00000] hover:bg-[#FF0000] rounded-sm text-white text-lg font-bold shadow-[1px_1px_0_0_rgba(0,0,0,0.5)] focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#ff8080]"
+        type="button"
+        id="closeBtn"
+      >
+        X
+      </button>
+    </div>
+    <!-- Content Area -->
+    <div
+      class="bg-[#ECE9D8] border border-t-0 border-[#808080] rounded-b-sm p-4 min-h-[130px] max-h-[160px] overflow-auto"
+    >
+      <p
+        aria-label="Editable text area"
+        class="text-[14px] text-black leading-relaxed min-h-[110px] max-h-[130px] overflow-y-auto"
+        contenteditable="false"
+        spellcheck="false"
+        id="editableText"
+        role="textbox"
+        aria-multiline="true"
+      >
+        This is a paragraph
+      </p>
+    </div>
+    <!-- Buttons Panel -->
+    <div
+      class="flex justify-end space-x-3 bg-[#C0C0C0] border-t border-[#808080] px-4 py-3 rounded-b-sm select-none"
+      id="buttonsPanel"
+    >
+      <button
+        class="btn-xp text-[13px] font-semibold px-5 py-1.5 rounded-sm shadow-md hover:bg-[#d0d0d0] focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#0059f0]"
+        type="button"
+        id="okBtn"
+      >
+        OK
+      </button>
+      <button
+        class="btn-xp text-[13px] font-semibold px-5 py-1.5 rounded-sm shadow-md hover:bg-[#d0d0d0] focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#0059f0]"
+        type="button"
+        id="cancelBtn"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Edit Panel -->
+  <div id="editPanel" class="">
+    <h2
+      class="font-bold text-[#000080] mb-3 text-lg select-none flex items-center gap-2"
+    >
+      <i class="fas fa-edit"></i> Edit Popup Properties
+    </h2>
+    <form id="editForm" class="space-y-4">
+      <!-- Icon URL -->
+      <div class="flex flex-col">
+        <label
+          for="iconUrl"
+          class="mb-1 font-semibold text-[#000080] select-none"
+          >Icon URL</label
+        >
+        <input
+          type="text"
+          id="iconUrl"
+          class="border border-[#808080] rounded-sm px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#0059f0]"
+          placeholder="Enter image URL for icon"
+          value="https://storage.googleapis.com/a1aa/image/033a5668-b79f-44af-5116-2dc999a9a02a.jpg"
+        />
+      </div>
+
+      <!-- Title Text -->
+      <div class="flex flex-col">
+        <label
+          for="titleText"
+          class="mb-1 font-semibold text-[#000080] select-none"
+          >Title Text</label
+        >
+        <input
+          type="text"
+          id="titleText"
+          class="border border-[#808080] rounded-sm px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#0059f0]"
+          placeholder="Enter popup title"
+          value="Text box"
+        />
+      </div>
+
+      <!-- Editable Text Content -->
+      <div class="flex flex-col">
+        <label
+          for="contentText"
+          class="mb-1 font-semibold text-[#000080] select-none"
+          >Content Text</label
+        >
+        <textarea
+          id="contentText"
+          rows="3"
+          class="border border-[#808080] rounded-sm px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#0059f0] resize-none"
+          placeholder="Enter popup content"
+        >This is a paragraph</textarea>
+      </div>
+
+      <!-- Buttons Visibility -->
+      <div class="flex flex-col space-y-2">
+        <span class="font-semibold text-[#000080] select-none">Buttons</span>
+        <label class="inline-flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="showOk"
+            checked
+            class="form-checkbox h-4 w-4 text-[#0059f0]"
+          />
+          <span>Show OK</span>
+        </label>
+        <label class="inline-flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="showCancel"
+            checked
+            class="form-checkbox h-4 w-4 text-[#0059f0]"
+          />
+          <span>Show Cancel</span>
+        </label>
+        <label class="inline-flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="showClose"
+            checked
+            class="form-checkbox h-4 w-4 text-[#0059f0]"
+          />
+          <span>Show Close (X)</span>
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-xp w-full mt-4 text-center font-semibold py-2 text-[14px]"
+      >
+        Apply Changes
+      </button>
+    </form>
+  </div>
+
+  <!-- Toggle Edit Panel Button -->
+  <button
+    id="toggleEditBtn"
+    aria-expanded="true"
+    aria-controls="editPanel"
+    title="Toggle Edit Panel"
+    type="button"
+  >
+    <i class="fas fa-edit"></i> Edit Popup
+  </button>
+
+  <script>
+    const iconUrlInput = document.getElementById("iconUrl");
+    const titleTextInput = document.getElementById("titleText");
+    const contentTextInput = document.getElementById("contentText");
+    const showOkCheckbox = document.getElementById("showOk");
+    const showCancelCheckbox = document.getElementById("showCancel");
+    const showCloseCheckbox = document.getElementById("showClose");
+
+    const popupIcon = document.getElementById("popupIcon");
+    const dialogTitle = document.getElementById("dialogTitle");
+    const editableText = document.getElementById("editableText");
+    const okBtn = document.getElementById("okBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const closeBtn = document.getElementById("closeBtn");
+
+    const editPanel = document.getElementById("editPanel");
+    const toggleEditBtn = document.getElementById("toggleEditBtn");
+
+    // Initialize content textarea with editable text content
+    contentTextInput.value = editableText.textContent.trim();
+
+    // Form submit handler
+    document.getElementById("editForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // Update icon
+      const url = iconUrlInput.value.trim();
+      if (url) {
+        popupIcon.src = url;
+        popupIcon.alt = `Custom icon from ${url}`;
+      }
+
+      // Update title text
+      dialogTitle.textContent = titleTextInput.value.trim() || "Text box";
+
+      // Update editable content text
+      editableText.textContent = contentTextInput.value;
+
+      // Show/hide buttons
+      okBtn.style.display = showOkCheckbox.checked ? "inline-flex" : "none";
+      cancelBtn.style.display = showCancelCheckbox.checked ? "inline-flex" : "none";
+      closeBtn.style.display = showCloseCheckbox.checked ? "inline-flex" : "none";
+    });
+
+    // Sync editable content changes back to textarea
+    editableText.addEventListener("input", () => {
+      contentTextInput.value = editableText.textContent;
+    });
+
+    // Toggle edit panel visibility
+    toggleEditBtn.addEventListener("click", () => {
+      const isHidden = editPanel.classList.toggle("hidden");
+      toggleEditBtn.setAttribute("aria-expanded", !isHidden);
+      toggleEditBtn.innerHTML = isHidden
+        ? '<i class="fas fa-edit"></i> Show Edit'
+        : '<i class="fas fa-edit"></i> Hide Edit';
+    });
+
+    // Initialize toggle button text
+    toggleEditBtn.innerHTML = '<i class="fas fa-edit"></i> Hide Edit';
+  </script>
+</body>
+</html>
