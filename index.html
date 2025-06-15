@@ -1,0 +1,191 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Louis14141 GitHub Projects - Dark Theme
+  </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+    }
+   /* Fade-in and slide-up animation */
+   @keyframes fadeSlideUp {
+     0% {
+       opacity: 0;
+       transform: translateY(20px);
+     }
+     100% {
+       opacity: 1;
+       transform: translateY(0);
+     }
+   }
+   .fade-slide-up {
+     animation: fadeSlideUp 0.6s ease forwards;
+   }
+   /* Scale up on hover for cards */
+   .card-hover-scale {
+     transition: transform 0.3s ease;
+   }
+   .card-hover-scale:hover {
+     transform: scale(1.05);
+     box-shadow: 0 10px 20px rgba(59, 130, 246, 0.5);
+   }
+   /* Image zoom on hover */
+   .img-hover-zoom {
+     transition: transform 0.4s ease;
+   }
+   .img-hover-zoom:hover {
+     transform: scale(1.1);
+   }
+   /* Button pulse on hover */
+   .btn-pulse {
+     transition: box-shadow 0.3s ease;
+   }
+   .btn-pulse:hover {
+     box-shadow: 0 0 8px 2px rgba(59, 130, 246, 0.7);
+   }
+  </style>
+ </head>
+ <body class="bg-gray-900 text-gray-300 min-h-screen flex flex-col">
+  <header class="bg-gray-800 shadow-md">
+   <div class="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+     <img alt="Profile picture of Louis14141, a young man with short hair smiling, GitHub avatar style" class="w-12 h-12 rounded-full border-2 border-blue-500" height="48" src="https://avatars.githubusercontent.com/u/207662682?v=4" width="48"/>
+     <h1 class="text-2xl font-semibold text-gray-100">
+      Louis14141 Projects
+     </h1>
+    </div>
+    <nav class="hidden md:flex space-x-6 text-gray-400 font-medium">
+     <a class="hover:text-blue-400 transition" href="#projects">
+      Projects
+     </a>
+     <a class="hover:text-blue-400 transition flex items-center space-x-1" href="https://github.com/louis14141" rel="noopener" target="_blank">
+      <i class="fab fa-github text-xl"></i>
+      <span>
+       GitHub
+      </span>
+     </a>
+    </nav>
+    <button aria-label="Toggle menu" class="md:hidden focus:outline-none focus:ring-2 focus:ring-blue-500" id="menu-btn">
+     <i class="fas fa-bars text-2xl text-gray-400"></i>
+    </button>
+   </div>
+   <nav class="md:hidden hidden bg-gray-800 border-t border-gray-700" id="mobile-menu">
+    <a class="block px-4 py-3 text-gray-300 hover:bg-gray-700" href="#projects">
+     Projects
+    </a>
+    <a class="block px-4 py-3 text-gray-300 hover:bg-gray-700 flex items-center space-x-2" href="https://github.com/louis14141" rel="noopener" target="_blank">
+     <i class="fab fa-github text-lg"></i>
+     <span>
+      GitHub
+     </span>
+    </a>
+   </nav>
+  </header>
+  <main class="flex-grow max-w-5xl mx-auto px-4 py-10">
+   <section class="space-y-8" id="projects">
+    <h2 class="text-3xl font-bold text-gray-100 mb-6 text-center">
+     My GitHub Projects
+    </h2>
+    <ul id="projects-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    </ul>
+   </section>
+  </main>
+  <footer class="bg-gray-800 border-t border-gray-700 py-6 mt-12">
+   <div class="max-w-5xl mx-auto px-4 text-center text-gray-400 text-sm select-none">
+    © 2024 Louis14141. All rights reserved.
+   </div>
+  </footer>
+
+  <script type="application/json" id="projects-data" class="hidden">
+    [
+      {
+        "title": "windows xp pop-up generator",
+        "image": "https://storage.googleapis.com/a1aa/image/96e2adf5-deac-40a2-c32d-f1aaa765c74f.jpg",
+        "description": "an windows xp pop-up generator",
+        "link": "windows-xp-pop-up",
+        "github": "https://github.com/louis14141/windows-xp-pop-up"
+      },
+      {
+        "title": "profile",
+        "image": "my profile",
+        "description": "my profile",
+        "link": "",
+        "github": "https://github.com/louis14141/"
+      }
+    ]
+  </script>
+
+  <script>
+   const menuBtn = document.getElementById('menu-btn');
+   const mobileMenu = document.getElementById('mobile-menu');
+
+   menuBtn.addEventListener('click', () => {
+     mobileMenu.classList.toggle('hidden');
+   });
+
+   function loadProjects() {
+     const dataScript = document.getElementById('projects-data');
+     const projects = JSON.parse(dataScript.textContent);
+     const projectsList = document.getElementById('projects-list');
+     projectsList.innerHTML = '';
+
+     projects.forEach((project, index) => {
+       const li = document.createElement('li');
+       li.className = 'bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition p-5 flex flex-col opacity-0 fade-slide-up card-hover-scale';
+       li.style.animationDelay = `${index * 150}ms`;
+
+       const img = document.createElement('img');
+       img.src = project.image;
+       img.alt = `Screenshot of project titled ${project.title}`;
+       img.className = 'rounded-md mb-4 object-cover w-full h-40 img-hover-zoom';
+       img.height = 200;
+       img.width = 400;
+
+       const h3 = document.createElement('h3');
+       h3.className = 'text-xl font-semibold text-gray-100 mb-2';
+       h3.textContent = project.title;
+
+       const p = document.createElement('p');
+       p.className = 'text-gray-300 flex-grow';
+       p.textContent = project.description || '';
+
+       const buttonsDiv = document.createElement('div');
+       buttonsDiv.className = 'mt-4 flex space-x-3';
+
+       // View on GitHub button
+       const githubBtn = document.createElement('a');
+       githubBtn.href = project.github || '#';
+       githubBtn.target = '_blank';
+       githubBtn.rel = 'noopener';
+       githubBtn.className = 'inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition btn-pulse flex-grow';
+       githubBtn.innerHTML = '<i class="fab fa-github mr-2"></i>View on GitHub';
+
+       // View Online button
+       const onlineBtn = document.createElement('a');
+       onlineBtn.href = '/' + project.link.replace(/^\/+/, '');
+       onlineBtn.target = '_blank';
+       onlineBtn.rel = 'noopener';
+       onlineBtn.className = 'inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition btn-pulse flex-grow';
+       onlineBtn.innerHTML = '<i class="fas fa-external-link-alt mr-2"></i>View Online';
+
+       buttonsDiv.appendChild(githubBtn);
+       buttonsDiv.appendChild(onlineBtn);
+
+       li.appendChild(img);
+       li.appendChild(h3);
+       li.appendChild(p);
+       li.appendChild(buttonsDiv);
+
+       projectsList.appendChild(li);
+     });
+   }
+
+   document.addEventListener('DOMContentLoaded', loadProjects);
+  </script>
+ </body>
+</html>
